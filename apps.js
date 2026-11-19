@@ -1,3 +1,4 @@
+// Sample income and expense transactions; amounts are stored in cents.
 const transactions = [
   {
     id: 1,
@@ -29,52 +30,37 @@ const transactions = [
   },
 ];
 
+// Formats an amount in cents as a dollar value with two decimal places.
 function formatMoney(cents) {
   const sign = cents < 0 ? '-' : '';
   return sign + '$' + (Math.abs(cents) / 100).toFixed(2);
 }
 
-console.log(formatMoney(transactions[1].amountCents));
-
-// Returns the sum of all transaction amounts in cents.
-function totalCents(transactions) {
-  return transactions.reduce(
-    (total, transaction) => total + transaction.amountCents,
-    0,
-  );
+// Returns the sum of the amountCents values for all transactions in the list.
+function totalCents(list) {
+  return list.reduce((sum, tx) => sum + tx.amountCents, 0);
 }
-console.log(totalCents(transactions));
 
 // Returns all transactions that match the specified category.
-function filterByCategory(transactions, category) {
-  return transactions.filter(
-    (transaction) => transaction.category === category,
-  );
+function fitlerByCategory(list, category) {
+  return list.filter((tx) => tx.category === category);
 }
-console.log(filterByCategory(transactions, 'Income'));
+
+// Return all transactions that match the specified type
+function filterByType(list, type) {
+  return list.filter((tx) => tx.type === type);
+}
 
 // Returns the total income, total expenses, remaining balance, and transaction count.
-function summarize(transactions) {
-  const totals = transactions.reduce(
-    (summary, transaction) => {
-      if (transaction.type === 'income') {
-        summary.totalIncome += transaction.amountCents;
-      } else if (transaction.type === 'expense') {
-        summary.totalExpense += transaction.amountCents;
-      }
-
-      return summary;
-    },
-    { totalIncome: 0, totalExpense: 0 },
-  );
-
+function summarize(list) {
+  const incomeCents = totalCents(filterByType(list, 'income'));
+  const expenseCents = totalCents(filterByType(list, 'expense'));
   return {
-    ...totals,
-    balance: totals.totalIncome - totals.totalExpense,
-    transactionCount: transactions.length,
+    incomeCents: incomeCents,
+    expenseCents: expenseCents,
+    balanceCents: incomeCents - expenseCents,
   };
 }
-console.log(summarize(transactions));
 
 // Returns the largest expense transaction, or undefined if there are no expenses.
 function biggestExpense(transactions) {
@@ -90,4 +76,31 @@ function biggestExpense(transactions) {
   }, undefined);
 }
 
-console.log(biggestExpense(transactions));
+// Checks whether the actual value matches the expected value and logs the result.
+function check(name, actual, expected) {
+  const ok = actual === expected;
+  console.log(
+    ok ? '✓' : '✗',
+    name,
+    ok ? '' : `(expected ${expected}, got ${actual})`,
+  );
+}
+
+// Check that 450 cents are formatted as $4.50.
+check('Format 450', formatMoney(450), '$4.50');
+
+// Check that the total for all transactions is calculated correctly.
+check('Total of all', totalCents(transactions), 30900);
+// Check that an empty transaction list has a total of zero.
+check('Total of empty list', totalCents([]), 0);
+
+// Check that exactly one transaction belongs to the Food category.
+check('Food count', fitlerByCategory(transactions, 'Food').length, 1);
+
+// Check that exactly one transaction belongs to the expense type.
+check('Expense Count', filterByType(transactions, 'expense').length, 3);
+console.log(filterByType(transactions, 'income'));
+console.log(filterByType(transactions, 'expense'));
+
+check('Balance', summarize(transactions).balanceCents, 29100);
+console.log(summarize(transactions));

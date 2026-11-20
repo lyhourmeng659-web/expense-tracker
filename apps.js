@@ -62,19 +62,15 @@ function summarize(list) {
   };
 }
 
-// Returns the largest expense transaction, or undefined if there are no expenses.
-function biggestExpense(transactions) {
-  return transactions.reduce((biggest, transaction) => {
-    if (
-      transaction.type === 'expense' &&
-      (!biggest || transaction.amountCents > biggest.amountCents)
-    ) {
-      return transaction;
-    }
-
-    return biggest;
-  }, undefined);
+// Returns a new transaction list with the transaction added.
+function addTransaction(list, tx) {
+  return [...list, tx];
 }
+
+// Creates a new array containing the note from each transaction.
+const notes = transactions.map((tx) => tx.note);
+
+// Returns the largest expense transaction, or undefined if there are no expenses.
 
 // Checks whether the actual value matches the expected value and logs the result.
 function check(name, actual, expected) {
@@ -102,5 +98,25 @@ check('Expense Count', filterByType(transactions, 'expense').length, 3);
 console.log(filterByType(transactions, 'income'));
 console.log(filterByType(transactions, 'expense'));
 
+// Check that the summary returns the correct remaining balance.
 check('Balance', summarize(transactions).balanceCents, 29100);
 console.log(summarize(transactions));
+
+// Check that adding a transaction increases the list length to five.
+check(
+  'new length',
+  addTransaction(transactions, {
+    id: 5,
+    note: 'Notebook',
+    category: 'Study',
+    type: 'expense',
+    amountCents: 300,
+  }).length,
+  5,
+);
+
+// Check that adding a transaction does not modify the original transaction list.
+check('original length', transactions.length, 4);
+
+// Check that the notes list contains all transaction notes in the original order.
+check('notes', notes.join(','), 'Salary,Lunch,Bus,Notebook');

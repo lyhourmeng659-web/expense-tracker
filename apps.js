@@ -70,7 +70,28 @@ function addTransaction(list, tx) {
 // Creates a new array containing the note from each transaction.
 const notes = transactions.map((tx) => tx.note);
 
-// Returns the largest expense transaction, or undefined if there are no expenses.
+// Returns the largest expense transaction, or null if there are no expenses.
+function biggestExpense(list) {
+  const expenses = filterByType(list, 'expense');
+  if (expenses.length === 0) return null;
+  return expenses.reduce((max, tx) =>
+    tx.amountCents > max.amountCents ? tx : max,
+  );
+}
+
+// Returns an object mapping each expense category to its total amountCents.
+function totalByCategory(list) {
+  const expenses = filterByType(list, 'expense');
+  return expenses.reduce((totals, tx) => {
+    totals[tx.category] = (totals[tx.category] || 0) + tx.amountCents;
+    return totals;
+  }, {});
+}
+
+// Returns the total amount of all expense transactions in the list.
+function totalExpense(list) {
+  return totalCents(filterByType(list, 'expense'));
+}
 
 // Checks whether the actual value matches the expected value and logs the result.
 function check(name, actual, expected) {
@@ -120,3 +141,14 @@ check('original length', transactions.length, 4);
 
 // Check that the notes list contains all transaction notes in the original order.
 check('notes', notes.join(','), 'Salary,Lunch,Bus,Notebook');
+
+// Check that the largest expense transaction is Lunch.
+check('biggest expense', biggestExpense(transactions).note, 'Lunch');
+
+// Check that there is no biggest expense in an empty transaction list.
+check('biggest expense empty', biggestExpense([]), null);
+
+// Check that food expenses total 450 cents.
+check('food total', totalByCategory(transactions).Food, 450);
+
+check('total expense', totalExpense(transactions), 900);

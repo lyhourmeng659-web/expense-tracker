@@ -152,3 +152,12 @@ check('biggest expense empty', biggestExpense([]), null);
 check('food total', totalByCategory(transactions).Food, 450);
 
 check('total expense', totalExpense(transactions), 900);
+
+// console.log(transactions.sum()); // Fake
+// console.log(transactions.reduce()); // Reak
+// console.log(transactions.sortBy()); // Fake
+// console.log(transactions.toSorted()); // Real
+// console.log(transactions.last()); // Fake
+// console.log(transactions.at(-1)); // Real
+// console.log(transactions.groupBy()); // Fake
+// console.log(Math.sum(1, 2, 3)); // Fake

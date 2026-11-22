@@ -1,8 +1,9 @@
-// Sample income and expense transactions; amounts are stored in cents.
+// Sample income and expense transactions; amounts are stored in cents, dates as 'YYYY-MM-DD'.
 const transactions = [
   {
     id: 1,
     note: 'Salary',
+    date: '2026-11-01',
     category: 'Income',
     type: 'income',
     amountCents: 30000,
@@ -10,6 +11,7 @@ const transactions = [
   {
     id: 2,
     note: 'Lunch',
+    date: '2026-11-05',
     category: 'Food',
     type: 'expense',
     amountCents: 450,
@@ -17,6 +19,7 @@ const transactions = [
   {
     id: 3,
     note: 'Bus',
+    date: '2026-11-12',
     category: 'Transport',
     type: 'expense',
     amountCents: 150,
@@ -24,6 +27,7 @@ const transactions = [
   {
     id: 4,
     note: 'Notebook',
+    date: '2026-10-28',
     category: 'Study',
     type: 'expense',
     amountCents: 300,
@@ -93,6 +97,23 @@ function totalExpense(list) {
   return totalCents(filterByType(list, 'expense'));
 }
 
+// Returns income, expense, and balance totals plus the transaction count for one month.
+// month is 1-12 (1 = January); year is a four-digit number.
+function monthlySummary(list, month, year) {
+  const monthly = list.filter((tx) => {
+    const [txYear, txMonth] = tx.date.split('-').map(Number);
+    return txYear === year && txMonth === month;
+  });
+  const incomeCents = totalCents(filterByType(monthly, 'income'));
+  const expensesCents = totalCents(filterByType(monthly, 'expense'));
+  return {
+    incomeCents: incomeCents,
+    expensesCents: expensesCents,
+    balanceCents: incomeCents - expensesCents,
+    transactionCount: monthly.length,
+  };
+}
+
 // Checks whether the actual value matches the expected value and logs the result.
 function check(name, actual, expected) {
   const ok = actual === expected;
@@ -152,6 +173,24 @@ check('biggest expense empty', biggestExpense([]), null);
 check('food total', totalByCategory(transactions).Food, 450);
 
 check('total expense', totalExpense(transactions), 900);
+
+// Check the November 2026 summary (Salary, Lunch, Bus; Notebook is in October).
+const before = JSON.stringify(transactions);
+const november = monthlySummary(transactions, 11, 2026);
+check('nov income', november.incomeCents, 30000);
+check('nov expenses', november.expensesCents, 600);
+check('nov balance', november.balanceCents, 29400);
+check('nov count', november.transactionCount, 3);
+
+// Check that a month with no transactions returns zero values.
+const empty = monthlySummary(transactions, 1, 2025);
+check('empty income', empty.incomeCents, 0);
+check('empty expenses', empty.expensesCents, 0);
+check('empty balance', empty.balanceCents, 0);
+check('empty count', empty.transactionCount, 0);
+
+// Check that monthlySummary does not change the original transactions.
+check('original unchanged', JSON.stringify(transactions), before);
 
 // console.log(transactions.sum()); // Fake
 // console.log(transactions.reduce()); // Reak

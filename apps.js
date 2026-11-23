@@ -46,7 +46,7 @@ function totalCents(list) {
 }
 
 // Returns all transactions that match the specified category.
-function fitlerByCategory(list, category) {
+function filterByCategory(list, category) {
   return list.filter((tx) => tx.category === category);
 }
 
@@ -133,7 +133,7 @@ check('Total of all', totalCents(transactions), 30900);
 check('Total of empty list', totalCents([]), 0);
 
 // Check that exactly one transaction belongs to the Food category.
-check('Food count', fitlerByCategory(transactions, 'Food').length, 1);
+check('Food count', filterByCategory(transactions, 'Food').length, 1);
 
 // Check that exactly one transaction belongs to the expense type.
 check('Expense Count', filterByType(transactions, 'expense').length, 3);
@@ -191,6 +191,13 @@ check('empty count', empty.transactionCount, 0);
 
 // Check that monthlySummary does not change the original transactions.
 check('original unchanged', JSON.stringify(transactions), before);
+
+// Check that November 2025 has no transactions, even though November 2026 does.
+check(
+  'different year',
+  monthlySummary(transactions, 11, 2025).transactionCount,
+  0,
+);
 
 // console.log(transactions.sum()); // Fake
 // console.log(transactions.reduce()); // Reak

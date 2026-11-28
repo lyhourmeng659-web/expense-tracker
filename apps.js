@@ -114,6 +114,62 @@ function monthlySummary(list, month, year) {
   };
 }
 
+function renderTransactions() {
+  const transactionList = document.querySelector('#transaction-list');
+
+  // TODO 1: សម្អាត rows ចាស់ចេញពី list
+  transactionList.replaceChildren();
+
+  const categoryColors = {
+    Food: 'bg-red-200',
+    Transport: 'bg-yellow-200',
+    Study: 'bg-blue-200',
+    Other: 'bg-neutral-200',
+  };
+
+  transactions.forEach((tx) => {
+    // TODO 2: បង្កើត <li>
+    const li = document.createElement('li');
+    li.className =
+      'mb-2 flex flex-col gap-1 border-2 border-black bg-white px-4 py-3 sm:flex-row sm:justify-between sm:gap-3';
+
+    // TODO 3: បង្កើត <span> សម្រាប់ tx.note
+    const span = document.createElement('span');
+    span.className = 'flex-1 font-semibold';
+
+    const categorySpan = document.createElement('span');
+    categorySpan.className =
+      'self-center border-2 border-black px-2 py-0.5 text-xs font-bold text-neutral-900';
+    categorySpan.classList.add(categoryColors[tx.category] || 'bg-neutral-200');
+
+    const amountSpan = document.createElement('span');
+    amountSpan.className = 'font-bold';
+
+    // TODO 4: ដាក់ tx.note ទៅក្នុង span ដោយ textContent
+    span.textContent = tx.note;
+    categorySpan.textContent = tx.category;
+
+    const amount = formatMoney(Math.abs(tx.amountCents));
+    amountSpan.textContent = tx.type === 'income' ? `+${amount}` : `-${amount}`;
+    amountSpan.classList.add(
+      tx.type === 'income' ? 'text-green-700' : 'text-red-700',
+    );
+
+    // TODO 5: ដាក់ span ទៅក្នុង li.......
+    li.appendChild(span);
+    li.appendChild(categorySpan);
+    li.appendChild(amountSpan);
+
+    // TODO 6: ដាក់ li ទៅក្នុង list
+    transactionList.appendChild(li);
+  });
+}
+
+renderTransactions();
+
+console.log(document.querySelectorAll('#transaction-list li'));
+console.log(document.querySelector('#transaction-list').textContent);
+
 // Checks whether the actual value matches the expected value and logs the result.
 function check(name, actual, expected) {
   const ok = actual === expected;

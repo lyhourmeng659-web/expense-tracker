@@ -7,7 +7,7 @@
     <title>Expense Tracker</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.18"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7"></script>
-    <script src="apps.js"></script>
+    <script src="apps.js" defer></script>
 </head>
 
 
@@ -23,27 +23,27 @@
         <section class="mb-6 flex flex-col flex-wrap gap-4 min-[600px]:flex-row min-[600px]:flex-wrap sm:flex-row">
             <div class="flex-1 border-2 border-black bg-white p-4 shadow-[4px_4px_0_#000] min-w-[140px]">
                 <p class="mb-2 text-neutral-600">Balance</p>
-                <p class="text-2xl font-bold">$291.00</p>
+                <p id="balance-amount" class="text-2xl font-bold">$291.00</p>
             </div>
             <div class="flex-1 border-2 border-black bg-white p-4 shadow-[4px_4px_0_#000] min-w-[140px]">
                 <p class="mb-2 text-neutral-600">Income</p>
-                <p class="text-2xl font-bold">$300.00</p>
+                <p id="income-amount" class="text-2xl font-bold">$300.00</p>
             </div>
             <div class="flex-1 border-2 border-black bg-white p-4 shadow-[4px_4px_0_#000] min-w-[140px]">
                 <p class="mb-2 text-neutral-600">Expenses</p>
-                <p class="text-2xl font-bold">$9.00</p>
+                <p id="expense-amount" class="text-2xl font-bold">$9.00</p>
             </div>
             <div class="flex-1 border-2 border-black bg-white p-4 shadow-[4px_4px_0_#000] min-w-[140px]">
                 <p class="mb-2 text-neutral-600">Biggest expense</p>
-                <p class="text-2xl font-bold text-red-600">$4.50</p>
+                <p id="biggest-expense-amount" class="text-2xl font-bold text-red-600">$4.50</p>
             </div>
         </section>
 
         <!-- Recent Content -->
         <section class="mb-6">
             <h2 class="mb-2 text-xl font-bold">Recent transactions</h2>
-            <ul>
-                <li
+            <ul id="transaction-list">
+                <!-- <li
                     class="mb-2 flex flex-col gap-1 border-2 border-black bg-white px-4 py-3 sm:flex-row sm:justify-between sm:gap-3">
                     <span class="flex-1 font-semibold">Salary</span>
                     <span
@@ -70,7 +70,7 @@
                     <span
                         class="self-center border-2 border-black bg-blue-200 px-2 py-0.5 text-xs font-bold text-neutral-900">Study</span>
                     <span class="font-bold text-red-700">-$3.00</span>
-                </li>
+                </li> -->
             </ul>
         </section>
 
